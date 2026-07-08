@@ -1,586 +1,52 @@
 /*
-================================================
+===========================================
 RETRO NET
-app.js
-Versão sem Firebase
-================================================
+APP.JS
+Versão 2.0
+===========================================
 */
-
-
-// ================================
-// CONFIGURAÇÃO
-// ================================
-
-const USERS_FILE = "users.json";
-const POSTS_FILE = "posts.json";
-
-let users = [];
-let posts = [];
 
 let currentUser = null;
 
 
 // ================================
-// INICIALIZAÇÃO
+// INICIAR
 // ================================
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
-    loadSession();
+    await restoreSession();
 
-    loadUsers();
+    updateUserArea();
 
-    loadPosts();
+    showProfile();
 
-    updateUserUI();
+    showAdminPanel();
 
 });
 
 
+
 // ================================
-// CARREGAR USUÁRIOS
+// RESTAURAR SESSÃO
 // ================================
 
-async function loadUsers(){
+async function restoreSession(){
 
-    try{
+    const { data } =
+    await supa.auth.getUser();
 
-        const response = await fetch(USERS_FILE);
-
-        users = await response.json();
-
-        console.log("Usuários carregados:", users);
-
-    }
-
-    catch(error){
-
-        console.log("Erro carregando usuários:", error);
-
-    }
+    currentUser = data.user;
 
 }
 
-
-// ================================
-// CARREGAR POSTS
-// ================================
-
-async function loadPosts(){
-
-    try{
-
-        const response = await fetch(POSTS_FILE);
-
-        posts = await response.json();
-
-        console.log("Posts carregados:", posts);
-
-        showPosts();
-
-    }
-
-    catch(error){
-
-        console.log("Erro carregando posts:", error);
-
-    }
-
-}
-
-
-// ================================
-// LOGIN
-// ================================
-
-function login(){
-
-    const username =
-    document.getElementById("username").value;
-
-
-    const password =
-    document.getElementById("password").value;
-
-const user = users.find(u =>
-
-    u.username.trim() === username.trim() &&
-    u.password.trim() === password.trim()
-
-);
-    );
-
-
-    if(user){
-
-        currentUser = user;
-
-
-        localStorage.setItem(
-
-            "retro_session",
-
-            JSON.stringify(user)
-
-        );
-
-
-        alert("Login realizado!");
-
-
-        window.location.href =
-        "index.html";
-
-
-    }
-
-    else{
-
-
-        alert("Usuário ou senha incorretos.");
-
-
-    }
-
-}
-
-
-// ================================
-// SAIR
-// ================================
-
-function logout(){
-
-
-    localStorage.removeItem(
-        "retro_session"
-    );
-
-
-    currentUser = null;
-
-
-    window.location.href =
-    "login.html";
-
-
-}
-
-
-// ================================
-// RESTAURAR LOGIN
-// ================================
-
-function loadSession(){
-
-
-    const saved =
-    localStorage.getItem(
-        "retro_session"
-    );
-
-
-    if(saved){
-
-        currentUser =
-        JSON.parse(saved);
-
-    }
-
-}
-
-
-// ================================
-// MOSTRAR USUÁRIO
-// ================================
-
-function updateUserUI(){
-
-
-    const area =
-    document.getElementById(
-        "userArea"
-    );
-
-
-    if(!area) return;
-
-
-    if(currentUser){
-
-
-        area.innerHTML = `
-
-        <p>
-        Olá, ${currentUser.username}!
-        </p>
-
-        <button onclick="logout()">
-        Sair
-        </button>
-
-        `;
-
-
-    }
-
-    else{
-
-
-        area.innerHTML = `
-
-        <a href="login.html">
-        Login
-        </a>
-
-        `;
-
-
-    }
-
-
-}
-
-
-// ================================
-// BLOG
-// ================================
-
-function showPosts(){
-
-
-    const container =
-    document.getElementById(
-        "posts"
-    );
-
-
-    if(!container) return;
-
-
-    container.innerHTML = "";
-
-
-    posts.forEach(post =>{
-
-
-        container.innerHTML += `
-
-        <div class="card">
-
-            <h2>
-            ${post.titulo}
-            </h2>
-
-
-            <p>
-            ${post.texto}
-            </p>
-
-
-            <small>
-            Por ${post.autor}
-            </small>
-
-
-        </div>
-
-        `;
-
-
-    });
-
-
-}
-
-
-
-
-/*
-================================================
-RETRO NET
-BLOG SYSTEM
-Parte 2
-================================================
-*/
-
-
-// ================================
-// CRIAR POST
-// ================================
-
-function createPost(){
-
-    if(!currentUser){
-
-        alert("Faça login primeiro.");
-
-        return;
-
-    }
-
-
-    const title =
-    document.getElementById("postTitle").value;
-
-
-    const text =
-    document.getElementById("postText").value;
-
-
-    if(title.trim()==="" ||
-       text.trim()===""){
-
-        alert("Preencha tudo.");
-
-        return;
-
-    }
-
-
-    const newPost = {
-
-        id: Date.now(),
-
-        titulo:title,
-
-        texto:text,
-
-        autor:currentUser.username,
-
-        data:new Date().toLocaleDateString(),
-
-        likes:0
-
-    };
-
-
-    posts.unshift(newPost);
-
-
-    saveLocalPosts();
-
-
-    alert("Post criado!");
-
-
-    showPosts();
-
-}
-
-
-
-// ================================
-// SALVAR POSTS LOCAIS
-// ================================
-
-function saveLocalPosts(){
-
-    localStorage.setItem(
-
-        "retro_posts",
-
-        JSON.stringify(posts)
-
-    );
-
-}
-
-
-
-// ================================
-// CARREGAR POSTS LOCAIS
-// ================================
-
-function loadLocalPosts(){
-
-
-    const saved =
-
-    localStorage.getItem(
-        "retro_posts"
-    );
-
-
-    if(saved){
-
-        posts =
-        JSON.parse(saved);
-
-    }
-
-
-}
-
-
-
-// ================================
-// CURTIR POST
-// ================================
-
-function likePost(id){
-
-
-    const post = posts.find(
-
-        p => p.id === id
-
-    );
-
-
-    if(!post)return;
-
-
-    post.likes++;
-
-
-    saveLocalPosts();
-
-
-    showPosts();
-
-
-}
-
-
-
-// ================================
-// MOSTRAR POSTS ATUALIZADO
-// ================================
-
-function showPosts(){
-
-
-    const container =
-
-    document.getElementById(
-        "posts"
-    );
-
-
-    if(!container)return;
-
-
-    container.innerHTML="";
-
-
-    posts.forEach(post=>{
-
-
-        container.innerHTML += `
-
-        <div class="card">
-
-
-            <h2>
-            ${post.titulo}
-            </h2>
-
-
-            <p>
-            ${post.texto}
-            </p>
-
-
-            <small>
-            👤 ${post.autor}
-            <br>
-            📅 ${post.data || ""}
-            </small>
-
-
-            <br><br>
-
-
-            <button onclick="likePost(${post.id})">
-
-            ❤️ ${post.likes || 0}
-
-            </button>
-
-
-        </div>
-
-
-        `;
-
-
-    });
-
-
-}
-
-
-
-// ================================
-// EDITOR DE POST
-// ================================
-
-function openEditor(){
-
-
-    if(!currentUser){
-
-        alert("Entre na conta.");
-
-        return;
-
-    }
-
-
-    const editor =
-
-    document.getElementById(
-        "postEditor"
-    );
-
-
-    if(editor){
-
-        editor.style.display="block";
-
-    }
-
-
-}
-
-
-
-// ================================
-// INICIALIZAÇÃO DO BLOG
-// ================================
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-()=>{
-
-
-    loadLocalPosts();
-
-
-    showPosts();
-
-
-}
-
-);
-
-/*
-================================================
-RETRO NET
-PERFIL SYSTEM
-Parte 3
-================================================
-*/
 
 
 // ================================
 // PEGAR PERFIL
 // ================================
 
-function getCurrentProfile(){
+async function getProfile(){
 
     if(!currentUser){
 
@@ -588,82 +54,151 @@ function getCurrentProfile(){
 
     }
 
+    const { data, error } =
+    await supa
 
-    return currentUser;
+    .from("profiles")
+
+    .select("*")
+
+    .eq("id", currentUser.id)
+
+    .single();
+
+
+    if(error){
+
+        return null;
+
+    }
+
+
+    return data;
 
 }
 
 
 
 // ================================
-// MOSTRAR PERFIL
+// ÁREA DO USUÁRIO
 // ================================
 
-function showProfile(){
-
+async function updateUserArea(){
 
     const area =
+    document.getElementById("userArea");
 
-    document.getElementById(
-        "profile"
-    );
-
-
-    if(!area)return;
-
-
-
-    if(!currentUser){
-
-
-        area.innerHTML = `
-
-        <div class="card">
-
-        Você não está logado.
-
-        </div>
-
-        `;
-
+    if(!area){
 
         return;
 
     }
 
 
+    if(!currentUser){
+
+        area.innerHTML = `
+
+        <a href="login.html">
+
+            LOGIN
+
+        </a>
+
+        `;
+
+        return;
+
+    }
+
+
+    const profile =
+    await getProfile();
+
 
     area.innerHTML = `
 
-    <div class="card">
-
-
-    <h2>
-
-    ${currentUser.username}
-
-    </h2>
-
-
     <p>
 
-    ${currentUser.bio || 
-    "Sem descrição."}
+        👤 ${profile?.username || currentUser.email}
 
     </p>
 
+    <button onclick="logout()">
 
-    <button onclick="editBio()">
-
-    Editar bio
+        SAIR
 
     </button>
 
+    `;
+
+}
+
+
+
+// ================================
+// PERFIL
+// ================================
+
+async function showProfile(){
+
+    const profileDiv =
+    document.getElementById("profile");
+
+
+    if(!profileDiv){
+
+        return;
+
+    }
+
+
+    if(!currentUser){
+
+        profileDiv.innerHTML = `
+
+        <div class="card">
+
+            Faça login.
+
+        </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const profile =
+    await getProfile();
+
+
+    profileDiv.innerHTML = `
+
+    <div class="card">
+
+        <h2>
+
+            ${profile.username}
+
+        </h2>
+
+        <p>
+
+            ${profile.bio || "Sem bio."}
+
+        </p>
+
+        <button onclick="editBio()">
+
+            Editar Bio
+
+        </button>
 
     </div>
 
     `;
-
 
 }
 
@@ -673,130 +208,65 @@ function showProfile(){
 // EDITAR BIO
 // ================================
 
-function editBio(){
+async function editBio(){
+
+    const profile =
+    await getProfile();
+
+    if(!profile){
+
+        return;
+
+    }
 
 
-    if(!currentUser)return;
-
-
-
-    const bio = prompt(
+    const novaBio =
+    prompt(
 
         "Digite sua nova bio:",
 
-        currentUser.bio || ""
+        profile.bio || ""
 
     );
 
 
+    if(novaBio === null){
 
-    if(bio === null)return;
+        return;
 
-
-
-    currentUser.bio = bio;
-
+    }
 
 
-    localStorage.setItem(
+    await supa
 
-        "retro_session",
+    .from("profiles")
 
-        JSON.stringify(currentUser)
+    .update({
+
+        bio:novaBio
+
+    })
+
+    .eq(
+
+        "id",
+
+        currentUser.id
 
     );
-
-
-
-    updateUserList();
-
 
 
     showProfile();
-
-
 
 }
 
 
 
 // ================================
-// ATUALIZAR USUÁRIO
-// ================================
-
-function updateUserList(){
-
-
-    const index = users.findIndex(
-
-        u =>
-
-        u.username === currentUser.username
-
-    );
-
-
-
-    if(index === -1)return;
-
-
-
-    users[index] = currentUser;
-
-
-
-    localStorage.setItem(
-
-        "retro_users",
-
-        JSON.stringify(users)
-
-    );
-
-
-}
-
-
-
-// ================================
-// INICIAR PERFIL
-// ================================
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-()=>{
-
-
-    showProfile();
-
-/*
-================================================
-RETRO NET
-ADMIN SYSTEM
-Parte 4
-================================================
-*/
-
-
-// ================================
-// ADMINS
-// ================================
-
-const ADMINS = [
-
-    "ProblematicKid2702"
-
-];
-
-
-// ================================
-// VERIFICAR ADMIN
+// ADMIN
 // ================================
 
 function isAdmin(){
-
 
     if(!currentUser){
 
@@ -804,30 +274,21 @@ function isAdmin(){
 
     }
 
-
-    return ADMINS.includes(
-
-        currentUser.username
-
-    );
-
+    return currentUser.email ===
+    "ProblematicKid2702@retronet.com";
 
 }
 
 
+
 // ================================
-// MOSTRAR PAINEL ADMIN
+// PAINEL ADMIN
 // ================================
 
 function showAdminPanel(){
 
-
     const panel =
-
-    document.getElementById(
-        "adminPanel"
-    );
-
+    document.getElementById("adminPanel");
 
     if(!panel){
 
@@ -836,536 +297,47 @@ function showAdminPanel(){
     }
 
 
-
     if(!isAdmin()){
 
-
-        panel.innerHTML = `
-
-        <div class="card">
-
-        Você não tem permissão.
-
-        </div>
-
-        `;
-
+        panel.innerHTML = "";
 
         return;
 
     }
-
 
 
     panel.innerHTML = `
 
-
     <div class="card">
-
-
-    <h2>
-
-    PAINEL ADMIN
-
-    </h2>
-
-
-    <p>
-
-    Bem-vindo,
-    ${currentUser.username}
-
-    </p>
-
-
-
-    <button onclick="clearPosts()">
-
-    APAGAR POSTS
-
-    </button>
-
-
-
-    </div>
-
-
-    `;
-
-
-}
-
-
-
-// ================================
-// APAGAR POSTS
-// ================================
-
-function clearPosts(){
-
-
-    if(!isAdmin()){
-
-
-        alert(
-            "Sem permissão."
-        );
-
-
-        return;
-
-    }
-
-
-
-    let confirmDelete = confirm(
-
-        "Tem certeza que deseja apagar todos os posts?"
-
-    );
-
-
-
-    if(!confirmDelete){
-
-        return;
-
-    }
-
-
-
-    posts = [];
-
-
-
-    saveLocalPosts();
-
-
-
-    showPosts();
-
-
-
-    alert(
-
-        "Posts apagados!"
-
-    );
-
-
-}
-
-
-
-// ================================
-// FIXAR POST
-// ================================
-
-function pinPost(id){
-
-
-    if(!isAdmin()){
-
-
-        alert(
-            "Sem permissão."
-        );
-
-
-        return;
-
-    }
-
-
-
-    const post = posts.find(
-
-        p => p.id === id
-
-    );
-
-
-
-    if(!post){
-
-        return;
-
-    }
-
-
-
-    post.fixado = true;
-
-
-
-    saveLocalPosts();
-
-
-
-    showPosts();
-
-
-}
-
-
-
-// ================================
-// INICIAR ADMIN
-// ================================
-
-document.addEventListener(
-
-"DOMContentLoaded",
-
-()=>{
-
-
-    showAdminPanel();
-
-
-});
-
-
-
-
-
-
-
-
-    
-
-});
-/*
-================================================
-RETRO NET
-COMMENTS SYSTEM
-Parte 5
-================================================
-*/
-
-
-// ================================
-// CARREGAR COMENTÁRIOS
-// ================================
-
-let comments = JSON.parse(
-
-    localStorage.getItem(
-        "retro_comments"
-    )
-
-) || [];
-
-
-
-// ================================
-// SALVAR COMENTÁRIOS
-// ================================
-
-function saveComments(){
-
-    localStorage.setItem(
-
-        "retro_comments",
-
-        JSON.stringify(comments)
-
-    );
-
-}
-
-
-
-// ================================
-// ADICIONAR COMENTÁRIO
-// ================================
-
-function addComment(postId){
-
-
-    if(!currentUser){
-
-        alert(
-            "Faça login para comentar."
-        );
-
-        return;
-
-    }
-
-
-
-    const input =
-
-    document.getElementById(
-
-        "comment-" + postId
-
-    );
-
-
-
-    if(!input)return;
-
-
-
-    const text = input.value.trim();
-
-
-
-    if(text === ""){
-
-        alert(
-            "Digite um comentário."
-        );
-
-        return;
-
-    }
-
-
-
-    const comment = {
-
-
-        id: Date.now(),
-
-
-        postId: postId,
-
-
-        author:
-        currentUser.username,
-
-
-        text: text,
-
-
-        date:
-        new Date()
-        .toLocaleDateString()
-
-
-    };
-
-
-
-    comments.push(comment);
-
-
-
-    saveComments();
-
-
-
-    input.value = "";
-
-
-
-    showPosts();
-
-
-
-}
-
-
-
-// ================================
-// MOSTRAR COMENTÁRIOS
-// ================================
-
-function showComments(postId){
-
-
-    const postComments =
-
-    comments.filter(
-
-        c => c.postId === postId
-
-    );
-
-
-
-    if(postComments.length === 0){
-
-
-        return `
-
-        <p>
-
-        Nenhum comentário ainda.
-
-        </p>
-
-        `;
-
-
-    }
-
-
-
-    let html = "";
-
-
-
-    postComments.forEach(comment=>{
-
-
-        html += `
-
-        <div class="comment">
-
-
-        <strong>
-
-        ${comment.author}
-
-        </strong>
-
-
-        <p>
-
-        ${comment.text}
-
-        </p>
-
-
-        <small>
-
-        ${comment.date}
-
-        </small>
-
-
-        </div>
-
-
-        `;
-
-
-    });
-
-
-
-    return html;
-
-
-}
-
-
-
-// ================================
-// ATUALIZAR SHOW POSTS
-// ================================
-
-function showPosts(){
-
-
-    const container =
-
-    document.getElementById(
-
-        "posts"
-
-    );
-
-
-
-    if(!container)return;
-
-
-
-    container.innerHTML="";
-
-
-
-    posts.forEach(post=>{
-
-
-        container.innerHTML += `
-
-
-        <div class="card">
-
 
         <h2>
 
-        ${post.titulo}
+            PAINEL ADMIN
 
         </h2>
 
+        <button onclick="window.location='blog.html'">
 
-
-        <p>
-
-        ${post.texto}
-
-        </p>
-
-
-
-        <small>
-
-        👤 ${post.autor}
-
-        </small>
-
-
-
-        <br><br>
-
-
-
-        <button onclick="likePost(${post.id})">
-
-        ❤️ ${post.likes || 0}
+            GERENCIAR POSTS
 
         </button>
 
+    </div>
 
+    `;
 
-        <hr>
-
-
-
-        <h3>
-
-        Comentários
-
-        </h3>
+}
 
 
 
-        ${showComments(post.id)}
+// ================================
+// LOGOUT
+// ================================
 
+async function logout(){
 
+    await supa.auth.signOut();
 
-        <input
-
-        id="comment-${post.id}"
-
-        placeholder="Comentar..."
-
-        >
-
-
-
-        <button onclick="addComment(${post.id})">
-
-        Enviar
-
-        </button>
-
-
-
-        </div>
-
-
-        `;
-
-
-    });
-
+    window.location.href = "login.html";
 
 }
