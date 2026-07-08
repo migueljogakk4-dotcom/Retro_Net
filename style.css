@@ -341,3 +341,58 @@ nav a{
 }
 
 }
+/* ===========================
+   INPUTS
+=========================== */
+
+input{
+
+    width:100%;
+
+    padding:14px;
+
+    background:#111;
+
+    border:3px solid white;
+
+    color:white;
+
+    font-family:'Press Start 2P', monospace;
+
+    outline:none;
+
+}
+
+input::placeholder{
+
+    color:#888;
+
+}
+
+button{
+
+    cursor:pointer;
+
+    background:#111;
+
+    color:white;
+
+    font-family:'Press Start 2P', monospace;
+
+    border:3px solid white;
+
+    padding:14px;
+
+    width:100%;
+
+    transition:.2s;
+
+}
+
+button:hover{
+
+    background:white;
+
+    color:black;
+
+}
