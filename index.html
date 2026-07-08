@@ -1,145 +1,148 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undertale Blog</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>RETRO NET</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
 
-    <header>
-        <h1>UNDERTALE BLOG</h1>
-    </header>
+<div id="background"></div>
 
-    <nav id="menu">
-        <div id="heart">❤️</div>
+<header>
 
-        <div class="opcao">HOME</div>
-        <div class="opcao">BLOG</div>
-        <div class="opcao">LINKS</div>
-        <div class="opcao">PERFIL</div>
-        <div class="opcao">SOBRE</div>
-    </nav>
+<div class="logo">
+RETRO NET
+</div>
 
-    <div id="dialogo-box">
-        <p id="dialogo"></p>
-    </div>
+<nav>
 
-    <!-- HOME -->
-    <section id="home" class="pagina ativa">
-        <div class="caixa">
-            <h2>Bem-vindo</h2>
+<a href="index.html">HOME</a>
 
-            <p>
-                * Você entrou no site do Miguel.
-            </p>
+<a href="blog.html">BLOG</a>
 
-            <p>
-                * Use ← → e ENTER para navegar.
-            </p>
-        </div>
-    </section>
+<a href="chat.html">MESSENGER</a>
 
-    <!-- BLOG -->
-    <section id="blog" class="pagina">
+<a href="perfil.html">PERFIL</a>
 
-        <div class="caixa">
+<a href="login.html">LOGIN</a>
 
-            <h2>Blog</h2>
+</nav>
 
-            <input
-                id="titulo"
-                placeholder="Título do post">
+</header>
 
-            <textarea
-                id="texto"
-                placeholder="Escreva aqui..."></textarea>
 
-            <button onclick="publicarPost()">
-                PUBLICAR
-            </button>
+<main>
 
-        </div>
+<section class="hero">
 
-        <div
-            id="posts"
-            class="caixa">
-        </div>
+<h1>Bem-vindo à RETRO NET</h1>
 
-    </section>
+<p>
+Um cantinho da internet inspirado nos computadores dos anos 2000,
+misturado com um visual pixelado.
+</p>
 
-    <!-- LINKS -->
-    <section id="links" class="pagina">
+<a class="button" href="blog.html">
+ENTRAR
+</a>
 
-        <div class="caixa">
+</section>
 
-            <h2>Links</h2>
+<section class="cards">
 
-            <p>
-                <a
-                href="https://discord.gg/N8xzQXeKY"
-                target="_blank">
-                Discord
-                </a>
-            </p>
+<div class="card">
 
-            <p>
-                <a
-                href="https://youtube.com/@MiguelDoPastel"
-                target="_blank">
-                YouTube
-                </a>
-            </p>
+<h2>BLOG</h2>
 
-        </div>
+<p>
+Leia postagens da comunidade.
+</p>
 
-    </section>
+<a href="blog.html">
+Abrir
+</a>
 
-    <!-- PERFIL -->
-    <section id="perfil" class="pagina">
+</div>
 
-        <div class="caixa">
+<div class="card">
 
-            <h2>Perfil</h2>
+<h2>MESSENGER</h2>
 
-            <p>
-                Miguel
-            </p>
+<p>
+Converse com seus amigos.
+</p>
 
-            <p>
-                Criador do site.
-            </p>
+<a href="chat.html">
+Abrir
+</a>
 
-            <p>
-                Fã de Undertale.
-            </p>
+</div>
 
-        </div>
+<div class="card">
 
-    </section>
+<h2>PERFIL</h2>
 
-    <!-- SOBRE -->
-    <section id="sobre" class="pagina">
+<p>
+Veja seu perfil.
+</p>
 
-        <div class="caixa">
+<a href="perfil.html">
+Abrir
+</a>
 
-            <h2>Sobre</h2>
+</div>
 
-            <p>
-                Projeto inspirado em Undertale.
-            </p>
+<div class="card">
 
-            <p>
-                Feito em HTML, CSS e JavaScript.
-            </p>
+<h2>LOGIN</h2>
 
-        </div>
+<p>
+Entrar na sua conta.
+</p>
 
-    </section>
+<a href="login.html">
+Abrir
+</a>
 
-    <script src="script.js"></script>
+</div>
+
+</section>
+
+<section class="news">
+
+<h2>NOTÍCIAS</h2>
+
+<div id="latestPosts">
+
+<p>
+Nenhuma postagem ainda...
+</p>
+
+</div>
+
+</section>
+
+</main>
+
+<footer>
+
+RETRO NET © 2026
+
+</footer>
+
+<script src="js/app.js"></script>
 
 </body>
 </html>
