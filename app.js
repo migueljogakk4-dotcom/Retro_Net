@@ -771,6 +771,268 @@ document.addEventListener(
 
     showProfile();
 
+/*
+================================================
+RETRO NET
+ADMIN SYSTEM
+Parte 4
+================================================
+*/
+
+
+// ================================
+// ADMINS
+// ================================
+
+const ADMINS = [
+
+    "ProblematicKid2702"
+
+];
+
+
+// ================================
+// VERIFICAR ADMIN
+// ================================
+
+function isAdmin(){
+
+
+    if(!currentUser){
+
+        return false;
+
+    }
+
+
+    return ADMINS.includes(
+
+        currentUser.username
+
+    );
+
+
+}
+
+
+// ================================
+// MOSTRAR PAINEL ADMIN
+// ================================
+
+function showAdminPanel(){
+
+
+    const panel =
+
+    document.getElementById(
+        "adminPanel"
+    );
+
+
+    if(!panel){
+
+        return;
+
+    }
+
+
+
+    if(!isAdmin()){
+
+
+        panel.innerHTML = `
+
+        <div class="card">
+
+        Você não tem permissão.
+
+        </div>
+
+        `;
+
+
+        return;
+
+    }
+
+
+
+    panel.innerHTML = `
+
+
+    <div class="card">
+
+
+    <h2>
+
+    PAINEL ADMIN
+
+    </h2>
+
+
+    <p>
+
+    Bem-vindo,
+    ${currentUser.username}
+
+    </p>
+
+
+
+    <button onclick="clearPosts()">
+
+    APAGAR POSTS
+
+    </button>
+
+
+
+    </div>
+
+
+    `;
+
+
+}
+
+
+
+// ================================
+// APAGAR POSTS
+// ================================
+
+function clearPosts(){
+
+
+    if(!isAdmin()){
+
+
+        alert(
+            "Sem permissão."
+        );
+
+
+        return;
+
+    }
+
+
+
+    let confirmDelete = confirm(
+
+        "Tem certeza que deseja apagar todos os posts?"
+
+    );
+
+
+
+    if(!confirmDelete){
+
+        return;
+
+    }
+
+
+
+    posts = [];
+
+
+
+    saveLocalPosts();
+
+
+
+    showPosts();
+
+
+
+    alert(
+
+        "Posts apagados!"
+
+    );
+
+
+}
+
+
+
+// ================================
+// FIXAR POST
+// ================================
+
+function pinPost(id){
+
+
+    if(!isAdmin()){
+
+
+        alert(
+            "Sem permissão."
+        );
+
+
+        return;
+
+    }
+
+
+
+    const post = posts.find(
+
+        p => p.id === id
+
+    );
+
+
+
+    if(!post){
+
+        return;
+
+    }
+
+
+
+    post.fixado = true;
+
+
+
+    saveLocalPosts();
+
+
+
+    showPosts();
+
+
+}
+
+
+
+// ================================
+// INICIAR ADMIN
+// ================================
+
+document.addEventListener(
+
+"DOMContentLoaded",
+
+()=>{
+
+
+    showAdminPanel();
+
+
+});
+
+
+
+
+
+
+
+
+    
 
 });
 /*
