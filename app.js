@@ -1,234 +1,294 @@
-/* =========================================================
-   RETRO NET
-   APP.JS - PARTE 1
-   FIREBASE + LOGIN
-========================================================= */
+/*
+================================================
+RETRO NET
+app.js
+Versão sem Firebase
+================================================
+*/
 
-/* =============================
-   FIREBASE
-============================= */
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCnY_1oPU6KIRlghoMcMQWgh3numf_Z0w0",
-  authDomain: "retro-net-m.firebaseapp.com",
-  projectId: "retro-net-m",
-  storageBucket: "retro-net-m.firebasestorage.app",
-  messagingSenderId: "403334878412",
-  appId: "1:403334878412:web:6cd40eb7a016708355de69"
-};
+// ================================
+// CONFIGURAÇÃO
+// ================================
 
-firebase.initializeApp(firebaseConfig);
+const USERS_FILE = "users.json";
+const POSTS_FILE = "posts.json";
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+let users = [];
+let posts = [];
 
-/* =============================
-   APP
-============================= */
+let currentUser = null;
 
-const App = {
 
-    user: null,
+// ================================
+// INICIALIZAÇÃO
+// ================================
 
-    init() {
+document.addEventListener("DOMContentLoaded", () => {
 
-        console.log("RETRO NET iniciada.");
+    loadSession();
 
-        this.listenAuth();
+    loadUsers();
 
-        this.clock();
+    loadPosts();
 
-    },
+    updateUserUI();
 
-    clock() {
+});
 
-        setInterval(() => {
 
-            const now = new Date();
+// ================================
+// CARREGAR USUÁRIOS
+// ================================
 
-            document.title =
-                "RETRO NET • " +
-                now.toLocaleTimeString();
-
-        },1000);
-
-    },
-
-    listenAuth() {
-
-        auth.onAuthStateChanged(async user=>{
-
-            if(!user){
-
-                this.user=null;
-
-                return;
-
-            }
-
-            this.user=user;
-
-            console.log("Logado:",user.email);
-
-        });
-
-    }
-
-};
-
-/* =============================
-   LOGIN
-============================= */
-
-async function login(){
-
-    const email=document.getElementById("email");
-    const password=document.getElementById("password");
-
-    if(!email||!password)return;
+async function loadUsers(){
 
     try{
 
-        await auth.signInWithEmailAndPassword(
+        const response = await fetch(USERS_FILE);
 
-            email.value,
+        users = await response.json();
 
-            password.value
+        console.log("Usuários carregados:", users);
+
+    }
+
+    catch(error){
+
+        console.log("Erro carregando usuários:", error);
+
+    }
+
+}
+
+
+// ================================
+// CARREGAR POSTS
+// ================================
+
+async function loadPosts(){
+
+    try{
+
+        const response = await fetch(POSTS_FILE);
+
+        posts = await response.json();
+
+        console.log("Posts carregados:", posts);
+
+        showPosts();
+
+    }
+
+    catch(error){
+
+        console.log("Erro carregando posts:", error);
+
+    }
+
+}
+
+
+// ================================
+// LOGIN
+// ================================
+
+function login(){
+
+    const username =
+    document.getElementById("username").value;
+
+
+    const password =
+    document.getElementById("password").value;
+
+
+    const user = users.find(u =>
+
+        u.username === username &&
+        u.password === password
+
+    );
+
+
+    if(user){
+
+        currentUser = user;
+
+
+        localStorage.setItem(
+
+            "retro_session",
+
+            JSON.stringify(user)
 
         );
+
 
         alert("Login realizado!");
 
-        location.href="index.html";
+
+        window.location.href =
+        "index.html";
+
 
     }
 
-    catch(error){
+    else{
 
-        alert(error.message);
 
-    }
+        alert("Usuário ou senha incorretos.");
 
-}
-
-/* =============================
-   CADASTRO
-============================= */
-
-async function register(){
-
-    const username=document.getElementById("username");
-    const email=document.getElementById("email");
-    const password=document.getElementById("password");
-
-    if(!username||!email||!password)return;
-
-    try{
-
-        const credential=
-
-        await auth.createUserWithEmailAndPassword(
-
-            email.value,
-
-            password.value
-
-        );
-
-        await db.collection("users")
-
-        .doc(credential.user.uid)
-
-        .set({
-
-            username:username.value,
-
-            email:email.value,
-
-            bio:"",
-
-            avatar:"",
-
-            createdAt:firebase.firestore.FieldValue.serverTimestamp()
-
-        });
-
-        alert("Conta criada!");
-
-        location.href="index.html";
-
-    }
-
-    catch(error){
-
-        alert(error.message);
 
     }
 
 }
 
-/* =============================
-   LOGOUT
-============================= */
 
-async function logout(){
+// ================================
+// SAIR
+// ================================
 
-    await auth.signOut();
+function logout(){
 
-    location.href="login.html";
 
-}
+    localStorage.removeItem(
+        "retro_session"
+    );
 
-/* =============================
-   PERFIL
-============================= */
 
-async function getProfile(){
+    currentUser = null;
 
-    if(!auth.currentUser)return null;
 
-    const doc=
+    window.location.href =
+    "login.html";
 
-    await db.collection("users")
-
-    .doc(auth.currentUser.uid)
-
-    .get();
-
-    return doc.data();
 
 }
 
-/* =============================
-   BOTÕES
-============================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+// ================================
+// RESTAURAR LOGIN
+// ================================
 
-    App.init();
+function loadSession(){
 
-    const loginButton=document.getElementById("loginButton");
 
-    if(loginButton){
+    const saved =
+    localStorage.getItem(
+        "retro_session"
+    );
 
-        loginButton.onclick=login;
 
-    }
+    if(saved){
 
-    const registerButton=document.getElementById("registerButton");
-
-    if(registerButton){
-
-        registerButton.onclick=register;
+        currentUser =
+        JSON.parse(saved);
 
     }
 
-    const logoutButton=document.getElementById("logoutButton");
+}
 
-    if(logoutButton){
 
-        logoutButton.onclick=logout;
+// ================================
+// MOSTRAR USUÁRIO
+// ================================
+
+function updateUserUI(){
+
+
+    const area =
+    document.getElementById(
+        "userArea"
+    );
+
+
+    if(!area) return;
+
+
+    if(currentUser){
+
+
+        area.innerHTML = `
+
+        <p>
+        Olá, ${currentUser.username}!
+        </p>
+
+        <button onclick="logout()">
+        Sair
+        </button>
+
+        `;
+
 
     }
 
-});
+    else{
+
+
+        area.innerHTML = `
+
+        <a href="login.html">
+        Login
+        </a>
+
+        `;
+
+
+    }
+
+
+}
+
+
+// ================================
+// BLOG
+// ================================
+
+function showPosts(){
+
+
+    const container =
+    document.getElementById(
+        "posts"
+    );
+
+
+    if(!container) return;
+
+
+    container.innerHTML = "";
+
+
+    posts.forEach(post =>{
+
+
+        container.innerHTML += `
+
+        <div class="card">
+
+            <h2>
+            ${post.titulo}
+            </h2>
+
+
+            <p>
+            ${post.texto}
+            </p>
+
+
+            <small>
+            Por ${post.autor}
+            </small>
+
+
+        </div>
+
+        `;
+
+
+    });
+
+
+}
