@@ -4,41 +4,62 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>RETRO NET</title>
 
 <link rel="stylesheet" href="style.css">
 
-</head>
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+rel="stylesheet">
+
+</head>
 
 <body>
 
 
+
 <header>
 
-<div class="logo">
-RETRO NET
-</div>
+<h1>
 
+RETRO NET
+
+</h1>
 
 <nav>
 
 <a href="index.html">
+
 HOME
+
 </a>
 
 <a href="blog.html">
+
 BLOG
+
 </a>
 
 <a href="perfil.html">
+
 PERFIL
+
 </a>
 
 <a href="login.html">
+
 LOGIN
+
 </a>
 
 </nav>
@@ -47,67 +68,83 @@ LOGIN
 
 
 
-<main class="hero">
 
 
-<div class="card">
+<main>
 
 
-<h1>
-BEM-VINDO À RETRO NET
-</h1>
 
+<section class="hero">
 
-<p>
-Uma rede retrô feita para amigos.
-</p>
+<h2>
 
+Bem-vindo!
+
+</h2>
 
 <p>
-Posts, projetos, ideias e coisas legais.
+
+A rede social retrô da comunidade.
+
 </p>
 
+</section>
 
-<br>
 
 
-<a class="button" href="blog.html">
 
-ENTRAR NO BLOG
 
-</a>
+<div
+id="userArea">
 
+Carregando...
 
 </div>
 
 
 
-<br>
-
 
 
 <div class="card">
 
-
 <h2>
-NOVIDADES
+
+Novidades
+
 </h2>
 
-
 <p>
-📝 Blog funcionando
+
+🟢 Sistema usando Supabase
+
 </p>
 
-
 <p>
-👤 Sistema de usuários ativo
+
+👤 Login online
+
 </p>
 
-
 <p>
-🎮 Estilo clássico RETRO NET
+
+📝 Blog compartilhado
+
 </p>
 
+<p>
+
+💬 Comentários online
+
+</p>
+
+</div>
+
+
+
+
+
+<div
+id="adminPanel">
 
 </div>
 
@@ -125,8 +162,13 @@ RETRO NET © 2026
 
 
 
-<script src="app.js"></script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supa.js"></script>
+
+<script src="app.js"></script>
 
 </body>
 
