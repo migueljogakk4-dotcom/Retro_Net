@@ -39,13 +39,15 @@ const { data, error } = await supa
         }
     );
 
-    if(error){
+if(error){
 
-        console.log(error);
+    alert(error.message);
 
-        container.innerHTML =
-        "<h2>Erro ao carregar.</h2>";
+    console.error(error);
 
+    return;
+
+}
         return;
 
     }
