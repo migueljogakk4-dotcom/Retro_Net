@@ -27,10 +27,10 @@ async function loadPosts(){
 
     .from("posts")
 
-    .select(`
-        *,
-        profiles(username)
-    `)
+const { data, error } = await supa
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending: false });
 
     .order(
         "created_at",
