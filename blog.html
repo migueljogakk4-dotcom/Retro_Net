@@ -4,36 +4,61 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>Blog - RETRO NET</title>
 
 <link rel="stylesheet" href="style.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+rel="stylesheet">
 
 </head>
 
-
 <body>
-
 
 <header>
 
 <div class="logo">
-RETRO NET
-</div>
 
+RETRO NET
+
+</div>
 
 <nav>
 
-<a href="index.html">HOME</a>
+<a href="index.html">
 
-<a href="blog.html">BLOG</a>
+HOME
 
-<a href="perfil.html">PERFIL</a>
+</a>
 
-<a href="login.html">LOGIN</a>
+<a href="blog.html">
+
+BLOG
+
+</a>
+
+<a href="perfil.html">
+
+PERFIL
+
+</a>
+
+<a href="login.html">
+
+LOGIN
+
+</a>
 
 </nav>
 
@@ -43,83 +68,79 @@ RETRO NET
 
 <main class="hero">
 
-
 <h1>
+
 BLOG
+
 </h1>
 
-
 <p>
-Posts da comunidade RETRO NET
+
+Compartilhe novidades com seus amigos.
+
 </p>
-
-
-
-<!-- ÁREA DO USUÁRIO -->
-
-<div id="userArea">
-
-</div>
-
-
 
 <br>
 
 
 
-<!-- CRIADOR DE POSTS -->
-
-<div id="postEditor" class="card">
-
+<div class="card">
 
 <h2>
-NOVO POST
-</h2>
 
+CRIAR POST
+
+</h2>
 
 <input
 
+type="text"
+
 id="postTitle"
 
-placeholder="Título do post">
+placeholder="Título"
 
+>
 
 <br><br>
-
 
 <textarea
 
 id="postText"
 
-placeholder="Escreva seu post..."
+placeholder="O que você está pensando?"
 
-rows="6">
+rows="8"
 
-</textarea>
+style="width:100%;"
 
+></textarea>
 
 <br><br>
 
+<button
 
-<button onclick="createPost()">
+class="button"
+
+onclick="createPost()"
+
+>
 
 PUBLICAR
 
 </button>
 
-
 </div>
 
-
-
-<br><br>
+<br>
 
 
 
-<!-- POSTS -->
+<div
 
-<div id="posts">
+id="posts"
 
+>
 
 <div class="card">
 
@@ -127,10 +148,7 @@ Carregando posts...
 
 </div>
 
-
 </div>
-
-
 
 </main>
 
@@ -144,8 +162,13 @@ RETRO NET © 2026
 
 
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="supa.js"></script>
+
 <script src="app.js"></script>
 
+<script src="blog.js"></script>
 
 </body>
 
