@@ -1,13 +1,12 @@
 /*
 ==========================================
 RETRO NET
-BLOG.JS
-Parte 1
+BLOG.JS V2
+PARTE 1
 ==========================================
 */
 
 let posts = [];
-
 
 // ==========================
 // CARREGAR POSTS
@@ -15,44 +14,47 @@ let posts = [];
 
 async function loadPosts(){
 
-    const container =
-    document.getElementById("posts");
+    const container = document.getElementById("posts");
 
     if(!container) return;
 
-    container.innerHTML = "<h2>Carregando...</h2>";
+    container.innerHTML = `
+        <div class="card">
+            Carregando posts...
+        </div>
+    `;
 
-    const {data,error} =
-    await supa
+    const { data, error } = await supa
+        .from("posts")
+        .select(`
+            id,
+            title,
+            content,
+            likes,
+            created_at,
+            author,
+            profiles (
+                username
+            )
+        `)
+        .order("created_at", { ascending:false });
 
-    .from("posts")
+    if(error){
 
-const { data, error } = await supa
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false });
+        console.error(error);
 
-    .order(
-        "created_at",
-        {
-            ascending:false
-        }
-    );
+        container.innerHTML = `
+            <div class="card">
+                <h2>Erro ao carregar posts</h2>
+                <p>${error.message}</p>
+            </div>
+        `;
 
-if(error){
-
-    alert(error.message);
-
-    console.error(error);
-
-    return;
-
-}
         return;
 
     }
 
-    posts = data;
+    posts = data || [];
 
     renderPosts();
 
@@ -66,88 +68,66 @@ if(error){
 
 function renderPosts(){
 
-    const container =
-    document.getElementById("posts");
+    const container = document.getElementById("posts");
 
-    if(!container)return;
+    if(!container) return;
 
-    container.innerHTML="";
+    container.innerHTML = "";
 
+    if(posts.length === 0){
 
-
-    if(posts.length===0){
-
-        container.innerHTML=`
-
-        <div class="card">
-
-        Nenhum post ainda.
-
-        </div>
-
+        container.innerHTML = `
+            <div class="card">
+                <h2>Nenhum post ainda.</h2>
+            </div>
         `;
 
         return;
 
     }
 
-
-
     posts.forEach(post=>{
+
+        const username =
+            post.profiles?.username ||
+            "Usuário";
 
         container.innerHTML += `
 
         <div class="card">
 
-        <h2>
+            <h2>${post.title}</h2>
 
-        ${post.title}
+            <p>${post.content}</p>
 
-        </h2>
+            <small>
+                👤 ${username}
+            </small>
 
-        <p>
+            <br><br>
 
-        ${post.content}
+            <button onclick="likePost('${post.id}')">
+                ❤️ ${post.likes || 0}
+            </button>
 
-        </p>
+            <br><br>
 
-        <small>
+            <div id="comments-${post.id}"></div>
 
-        👤 ${post.profiles?.username || "Desconhecido"}
+            <input
+                id="comment-${post.id}"
+                placeholder="Comentário..."
+            >
 
-        </small>
+            <button onclick="addComment('${post.id}')">
+                Enviar
+            </button>
 
-        <br><br>
-
-        <button onclick="likePost('${post.id}')">
-
-        ❤️ ${post.likes || 0}
-
-        </button>
-
-        <br><br>
-
-        <div id="comments-${post.id}">
-
-        </div>
-
-        <input
-
-        id="comment-${post.id}"
-
-        placeholder="Comentário..."
-
-        >
-
-        <button onclick="addComment('${post.id}')">
-
-        Enviar
-
-        </button>
-        ${renderAdminButtons(post)}
         </div>
 
         `;
+
+        loadComments(post.id);
 
     });
 
@@ -162,23 +142,23 @@ function renderPosts(){
 async function createPost(){
 
     const title =
-    document.getElementById("postTitle").value.trim();
+        document.getElementById("postTitle").value.trim();
 
     const content =
-    document.getElementById("postText").value.trim();
+        document.getElementById("postText").value.trim();
 
-    if(title==="" || content===""){
+    if(!title || !content){
 
-        alert("Preencha tudo.");
+        alert("Preencha todos os campos.");
 
         return;
 
     }
 
-    const {data} =
-    await supa.auth.getUser();
+    const { data:userData } =
+        await supa.auth.getUser();
 
-    if(!data.user){
+    if(!userData.user){
 
         alert("Faça login.");
 
@@ -186,36 +166,34 @@ async function createPost(){
 
     }
 
-    const {error} =
-    await supa
+    const { error } = await supa
+        .from("posts")
+        .insert({
 
-    .from("posts")
+            author:userData.user.id,
 
-    .insert({
+            title,
 
-        author:data.user.id,
+            content,
 
-        title:title,
+            likes:0
 
-        content:content,
-
-        likes:0
-
-    });
+        });
 
     if(error){
 
-        console.log(error);
+        alert(error.message);
+
+        console.error(error);
 
         return;
 
     }
 
-    document.getElementById("postTitle").value="";
+    document.getElementById("postTitle").value = "";
+    document.getElementById("postText").value = "";
 
-    document.getElementById("postText").value="";
-
-    loadPosts();
+    await loadPosts();
 
 }
 
