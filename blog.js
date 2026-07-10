@@ -24,21 +24,10 @@ async function loadPosts(){
         </div>
     `;
 
-    const { data, error } = await supa
-        .from("posts")
-        .select(`
-            id,
-            title,
-            content,
-            likes,
-            created_at,
-            author,
-            profiles (
-                username
-            )
-        `)
-        .order("created_at", { ascending:false });
-
+  const { data, error } = await supa
+    .from("posts")
+    .select("*")
+    .order("created_at", { ascending:false });
     if(error){
 
         console.error(error);
