@@ -227,7 +227,7 @@ container.innerHTML +=
 
 "<p>" +
 "<b>" +
-(comment.profile?.username || "Usuário") +
+JSON.stringify(comment) +
 "</b>" +
 "<br>" +
 comment.text +
