@@ -2,7 +2,7 @@
 // BLOG.JS V3 AAAAAAA
 // ========================
 
-
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 
 
 alert("blog.js carregou!");
