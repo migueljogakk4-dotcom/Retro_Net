@@ -195,7 +195,7 @@ if(!container) return;
 
 const { data, error } = await supa
 .from("comments")
-.select("*, profiles(username)")
+.select("*, profiles!comments_author_fkey(username)")
 .eq("post_id", postId)
 .order("created_at", { ascending:true });
 
