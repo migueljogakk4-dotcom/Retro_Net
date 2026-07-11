@@ -1,6 +1,5 @@
 // BLOG.JS V3C 
 
-alert("RetroNet blog.js V3C carregado!");
 
 let posts = [];
 
@@ -196,7 +195,7 @@ if(!container) return;
 
 const { data, error } = await supa
 .from("comments")
-.select("*")
+.select("*, profiles(username)")
 .eq("post_id", postId)
 .order("created_at", { ascending:true });
 
