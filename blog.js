@@ -1,11 +1,4 @@
-// =====================
-// BLOG.JS V3 AAAAAAA
-// ========================
-
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-alert("BLOG.JS V3");
-throw new Error("PAREI AQUI");
+alert("blog.js carregou!");
 
 let posts = [];
 
@@ -15,7 +8,7 @@ let posts = [];
 
 function toggleComments(postId){
 
-```
+
 const box =
     document.getElementById(`commentsBox-${postId}`);
 
@@ -32,7 +25,7 @@ if(box.style.display === "none"){
     box.style.display = "none";
 
 }
-```
+
 
 }
 
@@ -42,7 +35,7 @@ if(box.style.display === "none"){
 
 async function loadPosts(){
 
-```
+
 const container =
     document.getElementById("posts");
 
@@ -77,7 +70,7 @@ if(error){
 posts = data || [];
 
 renderPosts();
-```
+
 
 }
 
@@ -87,7 +80,7 @@ renderPosts();
 
 function renderPosts(){
 
-```
+
 const container =
     document.getElementById("posts");
 
@@ -158,7 +151,7 @@ posts.forEach(post=>{
     `;
 
 });
-```
+
 
 }
 
@@ -168,7 +161,7 @@ posts.forEach(post=>{
 
 async function createPost(){
 
-```
+
 const title =
     document.getElementById("postTitle").value.trim();
 
@@ -222,7 +215,7 @@ document.getElementById("postTitle").value = "";
 document.getElementById("postText").value = "";
 
 loadPosts();
-```
+
 
 }
 
@@ -232,7 +225,7 @@ loadPosts();
 
 async function likePost(postId){
 
-```
+
 const post =
     posts.find(p => p.id === postId);
 
@@ -256,7 +249,7 @@ if(error){
 }
 
 loadPosts();
-```
+
 
 }
 
@@ -266,7 +259,7 @@ loadPosts();
 
 async function loadComments(postId){
 
-```
+
 const container =
     document.getElementById(`comments-${postId}`);
 
@@ -313,7 +306,7 @@ data.forEach(comment=>{
     `;
 
 });
-```
+
 
 }
 
@@ -323,7 +316,7 @@ data.forEach(comment=>{
 
 async function addComment(postId){
 
-```
+
 const input =
     document.getElementById(`comment-${postId}`);
 
@@ -368,7 +361,7 @@ if(error){
 input.value = "";
 
 loadComments(postId);
-```
+
 
 }
 
@@ -378,7 +371,6 @@ loadComments(postId);
 
 async function deletePost(postId){
 
-```
 if(!confirm("Apagar este post?")){
 
     return;
@@ -399,7 +391,7 @@ if(error){
 }
 
 loadPosts();
-```
+
 
 }
 
@@ -409,7 +401,6 @@ loadPosts();
 
 document.addEventListener(
 
-```
 "DOMContentLoaded",
 
 ()=>{
@@ -417,6 +408,5 @@ document.addEventListener(
     loadPosts();
 
 }
-```
 
 );
