@@ -1,3 +1,5 @@
+alert("TESTE BLOG");
+
 /*
 ===================================
 BLOG.JS V3B NO CRASE EDITION
