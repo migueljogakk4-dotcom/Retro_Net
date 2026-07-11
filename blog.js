@@ -227,7 +227,7 @@ container.innerHTML +=
 
 "<p>" +
 "<b>" +
-(comment.author || "Usuário") +
+(comment.profile?.username || "Usuário") +
 "</b>" +
 "<br>" +
 comment.text +
