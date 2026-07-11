@@ -16,7 +16,7 @@ container.innerHTML = `
 
 const { data, error } = await supa
 .from("posts")
-.select("*")
+.select("*, profiles ( username )")
 .order("created_at", { ascending:false });
 
 if(error){
@@ -59,7 +59,7 @@ posts.forEach(post=>{
 
 container.innerHTML += `
 
-<div class="card"> <h2>${post.title}</h2> <p>${post.content}</p> <small> 👤 ${post.author || "Usuário"} </small>
+<div class="card"> <h2>${post.title}</h2> <p>${post.content}</p> <small> 👤 ${post.profiles?.username || "Usuário"} </small>
 
 <br><br>
 
