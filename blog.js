@@ -1,7 +1,10 @@
-// BLOG.JS V3C 
-
+alert("RetroNet V3D carregado!");
 
 let posts = [];
+
+// ==========================
+// CARREGAR POSTS/PT 1
+// ==========================
 
 async function loadPosts(){
 
@@ -15,16 +18,16 @@ container.innerHTML = `
 
 const { data, error } = await supa
 .from("posts")
-.select("*, profiles ( username )")
+.select(*, profiles ( username ))
 .order("created_at", { ascending:false });
 
 if(error){
 
+console.error(error);
+
 container.innerHTML = `
 
-<div class="card"> Erro ao carregar posts: <br> ${error.message} </div> `;
-
-console.error(error);
+<div class="card"> Erro: ${error.message} </div> `;
 
 return;
 
@@ -35,6 +38,10 @@ posts = data || [];
 renderPosts();
 
 }
+
+// ==========================
+// MOSTRAR POSTS
+// ==========================
 
 function renderPosts(){
 
@@ -56,23 +63,52 @@ return;
 
 posts.forEach(post=>{
 
+let username = "Usuário";
+
+if(post.profiles){
+
+username = post.profiles.username;
+
+}
+
 container.innerHTML += `
 
-<div class="card"> <h2>${post.title}</h2> <p>${post.content}</p> <small> 👤 ${post.profiles?.username || "Usuário"} </small>
+<div class="card"> <h2>${post.title}</h2> <p>${post.content}</p> <small> 👤 ${username} </small>
 
 <br><br>
 
-<button onclick="likePost('${post.id}')"> ❤️ ${post.likes || 0} </button>
+<button onclick="likePost('${post.id}')">
+
+❤️ ${post.likes || 0}
+
+</button>
 
 <br><br>
 
-<button onclick="toggleComments('${post.id}')"> 💬 Comentários </button> <div id="commentsBox-${post.id}" style="display:none"> <br> <div id="comments-${post.id}"> </div> <input id="comment-${post.id}" placeholder="Comentário"> <button onclick="addComment('${post.id}')"> Enviar </button> </div> </div>
+<button onclick="toggleComments('${post.id}')">
+
+💬 Comentários
+
+</button> <div id="commentsBox-${post.id}" style="display:none"> <div id="comments-${post.id}"></div> <input id="comment-${post.id}" placeholder="Comentário"> <button onclick="addComment('${post.id}')">
+
+Enviar
+
+</button> </div> </div>
 
 `;
 
 });
 
 }
+
+/*
+=====================
+PARTE 2
+=====================
+*/
+// ==========================
+// CRIAR POST
+// ==========================
 
 async function createPost(){
 
@@ -90,11 +126,12 @@ return;
 
 }
 
-const { data:userData } = await supa.auth.getUser();
+const { data:userData } =
+await supa.auth.getUser();
 
 if(!userData.user){
 
-alert("Você precisa estar logado.");
+alert("Faça login.");
 
 return;
 
@@ -132,11 +169,14 @@ loadPosts();
 
 }
 
+// ==========================
+// CURTIR POST
+// ==========================
+
 async function likePost(postId){
 
-const post = posts.find(
-p => p.id === postId
-);
+const post =
+posts.find(p=>p.id === postId);
 
 if(!post) return;
 
@@ -161,12 +201,14 @@ loadPosts();
 
 }
 
+// ==========================
+// ABRIR COMENTÁRIOS
+// ==========================
+
 function toggleComments(postId){
 
 const box =
-document.getElementById(
-"commentsBox-" + postId
-);
+document.getElementById("commentsBox-" + postId);
 
 if(!box) return;
 
@@ -184,39 +226,44 @@ box.style.display = "none";
 
 }
 
+
+/*
+========================
+STARDUST CRUSADERS
+*/
+
+// ==========================
+// CARREGAR COMENTÁRIOS
+// ==========================
+
 async function loadComments(postId){
 
 const container =
-document.getElementById(
-"comments-" + postId
-);
+document.getElementById("comments-" + postId);
 
 if(!container) return;
 
 const { data, error } = await supa
 .from("comments")
-.select("*, profiles!comments_author_fkey(username)")
+.select(*, profiles ( username ))
 .eq("post_id", postId)
 .order("created_at", { ascending:true });
 
 if(error){
 
-container.innerHTML =
-"Erro ao carregar comentários.";
-
 console.error(error);
+
+container.innerHTML = "Erro ao carregar comentários.";
 
 return;
 
 }
 
-alert(JSON.stringify(data));
 container.innerHTML = "";
 
-if(data.length === 0){
+if(!data || data.length === 0){
 
-container.innerHTML =
-"Nenhum comentário.";
+container.innerHTML = "Nenhum comentário.";
 
 return;
 
@@ -224,12 +271,13 @@ return;
 
 data.forEach(comment=>{
 
+const username =
+comment.profiles?.username || "Usuário";
+
 container.innerHTML +=
 
 "<p>" +
-"<b>" +
-(comment.profile?.username || "Usuário") + +
-"</b>" +
+"<b>👤 " + username + "</b>" +
 "<br>" +
 comment.text +
 "</p>" +
@@ -239,12 +287,14 @@ comment.text +
 
 }
 
+// ==========================
+// ADICIONAR COMENTÁRIO
+// ==========================
+
 async function addComment(postId){
 
 const input =
-document.getElementById(
-"comment-" + postId
-);
+document.getElementById("comment-" + postId);
 
 const text =
 input.value.trim();
@@ -290,7 +340,16 @@ loadComments(postId);
 
 }
 
+// ==========================
+// APAGAR POST
+// ==========================
+
 async function deletePost(postId){
+
+const confirmDelete =
+confirm("Apagar este post?");
+
+if(!confirmDelete) return;
 
 const { error } = await supa
 .from("posts")
@@ -308,6 +367,10 @@ return;
 loadPosts();
 
 }
+
+// ==========================
+// INICIAR BLOG
+// ==========================
 
 document.addEventListener(
 "DOMContentLoaded",
